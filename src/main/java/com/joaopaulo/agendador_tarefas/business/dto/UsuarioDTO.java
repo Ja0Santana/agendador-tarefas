@@ -1,0 +1,13 @@
+package com.joaopaulo.agendador_tarefas.business.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class UsuarioDTO {
+    private String email;
+    private String senha;
+}
