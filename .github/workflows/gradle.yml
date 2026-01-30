@@ -3,12 +3,16 @@ name: PR Workflow
 on:
   pull_request:
     branches:
-      - main
+      - master
     types:
       - opened
       - synchronize
       - reopened
-
+  push:
+    branches:
+      -master
+  workflow_dispatch:
+    
 jobs:
   build:
     runs-on: ubuntu-latest
