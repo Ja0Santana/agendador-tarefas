@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl{
 
-    private UsuarioClient usuarioClient;
+    private final UsuarioClient usuarioClient;
 
     public UserDetails carregarDadosUsuario(String email, String token) {
         UsuarioDTO usuarioDTO = usuarioClient.buscarUsuarioPorEmail(email, token);
