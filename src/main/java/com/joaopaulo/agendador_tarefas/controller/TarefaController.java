@@ -18,19 +18,19 @@ public class TarefaController {
     private final TarefaService tarefaService;
 
     @PostMapping
-    public ResponseEntity<TarefaDTO> cadastrarTarefa(@RequestBody TarefaDTO tarefa, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<TarefaDTO> gravarTarefa(@RequestBody TarefaDTO tarefa, @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(tarefaService.gravarTarefa(token, tarefa));
     }
 
     @GetMapping("/eventos")
     public ResponseEntity<List<TarefaDTO>> buscaListaDeTarefasPorPeriodo(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicial,
                                                                          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFinal) {
-        return ResponseEntity.ok(tarefaService.buscarTarefasPorPeriodo(dataInicial, dataFinal));
+        return ResponseEntity.ok(tarefaService.buscaListaDeTarefasPorPeriodo(dataInicial, dataFinal));
     }
 
     @GetMapping
-    public ResponseEntity<List<TarefaDTO>> buscaListaDeTarefasPorUsuario(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(tarefaService.buscarTarefasPorEmail(token));
+    public ResponseEntity<List<TarefaDTO>> buscaListaDeTarefasPorEmail(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(tarefaService.buscaListaDeTarefasPorEmail(token));
     }
 
     @DeleteMapping
@@ -40,12 +40,12 @@ public class TarefaController {
     }
 
     @PatchMapping
-    public ResponseEntity<TarefaDTO> atualizarStatusNotificacaoTarefa(@RequestParam("status")StatusNotificacao statusNotificacao, @RequestParam("id") String id) {
-        return ResponseEntity.ok(tarefaService.alterarStatusDaTarefaPorId(statusNotificacao, id));
+    public ResponseEntity<TarefaDTO> atualizarStatusNotificacaoDaTarefa(@RequestParam("status")StatusNotificacao statusNotificacao, @RequestParam("id") String id) {
+        return ResponseEntity.ok(tarefaService.atualizarStatusNotificacaoDaTarefa(statusNotificacao, id));
     }
 
     @PutMapping
-    public ResponseEntity<TarefaDTO> atualizarTarefa(@RequestBody TarefaDTO tarefaDTO, @RequestParam("id") String id) {
+    public ResponseEntity<TarefaDTO> alterarTarefa(@RequestBody TarefaDTO tarefaDTO, @RequestParam("id") String id) {
         return ResponseEntity.ok(tarefaService.alterarTarefa(tarefaDTO, id));
     }
 }

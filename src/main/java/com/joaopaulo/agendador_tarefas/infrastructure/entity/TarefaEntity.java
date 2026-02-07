@@ -1,6 +1,5 @@
 package com.joaopaulo.agendador_tarefas.infrastructure.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.joaopaulo.agendador_tarefas.infrastructure.enums.StatusNotificacao;
 import lombok.*;
 import org.springframework.data.annotation.Id;
