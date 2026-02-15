@@ -31,14 +31,14 @@ public class TarefaService {
         return tarefaMapper.paraTarefaDTO(tarefaRepository.save(tarefaEntity));
     }
 
-    public List<TarefaDTO> buscarTarefasPorPeriodo(LocalDateTime dataInicial, LocalDateTime dataFinal) {
-        List<TarefaEntity> tarefas = tarefaRepository.findByDataEventoBetween(dataInicial, dataFinal);
+    public List<TarefaDTO> buscaListaDeTarefasPorPeriodo(LocalDateTime dataInicial, LocalDateTime dataFinal) {
+        List<TarefaEntity> tarefas = tarefaRepository.findByDataEventoBetweenAndStatusNotificacao(dataInicial, dataFinal, StatusNotificacao.PENDENTE);
         return tarefas.stream()
                 .map(tarefaMapper::paraTarefaDTO)
                 .toList();
     }
 
-    public List<TarefaDTO> buscarTarefasPorEmail(String token) {
+    public List<TarefaDTO> buscaListaDeTarefasPorEmail(String token) {
         String email = jwtUtil.extractUsername(token.substring(7));
         List<TarefaEntity> tarefas = tarefaRepository.findByEmailUsuario(email);
         return tarefas.stream()
@@ -52,7 +52,7 @@ public class TarefaService {
             throw new ResourceNotFoundException("Erro ao deletar tarefa por id, id inexistente: " + id + e.getCause());
         }
     }
-    public TarefaDTO alterarStatusDaTarefaPorId(StatusNotificacao statusNotificacao, String id) {
+    public TarefaDTO atualizarStatusNotificacaoDaTarefa(StatusNotificacao statusNotificacao, String id) {
         try {
             TarefaEntity tarefaEntity = tarefaRepository.findById(id).
                     orElseThrow(() -> new ResourceNotFoundException("Tarefa nao encontrada para o id: " + id));
