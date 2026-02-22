@@ -20,13 +20,11 @@ public class SecurityConfig {
     public static final String SECURITY_SCHEME = "BearerAuth";
     // Instâncias de JwtUtil e UserDetailsService injetadas pelo Spring
     private final JwtUtil jwtUtil;
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
     // Construtor para injeção de dependências de JwtUtil e UserDetailsService
     @Autowired
-    public SecurityConfig(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService) {
+    public SecurityConfig(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
-        this.userDetailsServiceImpl = userDetailsService;
     }
 
     // Configuração do filtro de segurança
