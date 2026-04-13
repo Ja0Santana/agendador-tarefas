@@ -46,32 +46,23 @@ public class TarefaService {
                 .toList();
     }
     public void deletarTarefaPorId(String id) {
-        try{
-        tarefaRepository.deleteById(id);
-        } catch (ResourceNotFoundException e){
-            throw new ResourceNotFoundException("Erro ao deletar tarefa por id, id inexistente: " + id + e.getCause());
+        if (!tarefaRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Tarefa nao encontrada para o id: " + id);
         }
+        tarefaRepository.deleteById(id);
     }
-    public TarefaDTO atualizarStatusNotificacaoDaTarefa(StatusNotificacao statusNotificacao, String id) {
-        try {
-            TarefaEntity tarefaEntity = tarefaRepository.findById(id).
-                    orElseThrow(() -> new ResourceNotFoundException("Tarefa nao encontrada para o id: " + id));
 
+    public TarefaDTO atualizarStatusNotificacaoDaTarefa(StatusNotificacao statusNotificacao, String id) {
+        TarefaEntity tarefaEntity = tarefaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Tarefa nao encontrada para o id: " + id));
         tarefaEntity.setStatusNotificacao(statusNotificacao);
         return tarefaMapper.paraTarefaDTO(tarefaRepository.save(tarefaEntity));
-        }catch (ResourceNotFoundException e){
-            throw new ResourceNotFoundException("Tarefa nao encontrada para o id: " + id + e.getCause());
-        }
     }
 
-    public TarefaDTO alterarTarefa (TarefaDTO tarefaDTO, String id) {
-        try {
-            TarefaEntity tarefaEntity = tarefaRepository.findById(id).
-                    orElseThrow(() -> new ResourceNotFoundException("Tarefa nao encontrada para o id: " + id));
-            tarefaUpdateMapper.updateTarefas(tarefaDTO, tarefaEntity);
-            return tarefaMapper.paraTarefaDTO(tarefaRepository.save(tarefaEntity));
-        } catch (ResourceNotFoundException e) {
-            throw new ResourceNotFoundException("Tarefa nao encontrada para o id: " + id + e.getCause());
-        }
+    public TarefaDTO alterarTarefa(TarefaDTO tarefaDTO, String id) {
+        TarefaEntity tarefaEntity = tarefaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Tarefa nao encontrada para o id: " + id));
+        tarefaUpdateMapper.updateTarefas(tarefaDTO, tarefaEntity);
+        return tarefaMapper.paraTarefaDTO(tarefaRepository.save(tarefaEntity));
     }
 }
