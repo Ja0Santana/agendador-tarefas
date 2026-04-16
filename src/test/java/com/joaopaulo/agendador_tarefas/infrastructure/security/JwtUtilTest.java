@@ -16,12 +16,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 class JwtUtilTest {
 
     private JwtUtil jwtUtil;
-    private final String secretKey = "YTM0NTY3ODlhY2RlZmdpamprbG1ub3BxcnN0dXZ3eHl6MTIzNDU2Nzg5MGFiY2RlZmdpaWpqa2xtbm9wcXJzdHV2d3h5ejEyMzQ1Njc4OTA=";
 
     @BeforeEach
     void setUp() {
         jwtUtil = new JwtUtil();
-        ReflectionTestUtils.setField(jwtUtil, "secretKey", secretKey);
+        
+        // Gera uma chave segura dinâmica para o teste (HS256 necessita de 256 bits)
+        javax.crypto.SecretKey key = io.jsonwebtoken.Jwts.SIG.HS256.key().build();
+        String dynamicSecret = java.util.Base64.getEncoder().encodeToString(key.getEncoded());
+        
+        ReflectionTestUtils.setField(jwtUtil, "secretKey", dynamicSecret);
     }
 
     @Test
@@ -49,13 +53,14 @@ class JwtUtilTest {
     }
 
     private String generateToken(String subject, long expirationMillis) {
-        byte[] keyBytes = Base64.getDecoder().decode(secretKey);
-        SecretKey key = Keys.hmacShaKeyFor(keyBytes);
+        String secretKey = (String) org.springframework.test.util.ReflectionTestUtils.getField(jwtUtil, "secretKey");
+        byte[] keyBytes = java.util.Base64.getDecoder().decode(secretKey);
+        javax.crypto.SecretKey key = io.jsonwebtoken.security.Keys.hmacShaKeyFor(keyBytes);
 
-        return Jwts.builder()
+        return io.jsonwebtoken.Jwts.builder()
                 .subject(subject)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expirationMillis))
+                .issuedAt(new java.util.Date())
+                .expiration(new java.util.Date(System.currentTimeMillis() + expirationMillis))
                 .signWith(key)
                 .compact();
     }
