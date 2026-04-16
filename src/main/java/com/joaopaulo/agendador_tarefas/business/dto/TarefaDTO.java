@@ -23,4 +23,6 @@ public class TarefaDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime dataAlteracao;
     private StatusNotificacao statusNotificacao;
+    private String cor;
+    private String icone;
 }

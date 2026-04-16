@@ -23,4 +23,6 @@ public class TarefaEntity {
     private String emailUsuario;
     private LocalDateTime dataAlteracao;
     private StatusNotificacao statusNotificacao;
+    private String cor;
+    private String icone;
 }
