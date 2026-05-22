@@ -31,6 +31,15 @@ public class GlobalExceptionHandler {
                 HttpStatus.UNAUTHORIZED.getReasonPhrase()));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponseDTO> handleIllegalArgumentException(IllegalArgumentException ex,
+                                                                            HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(builderError(HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase()));
+    }
+
     public ErrorResponseDTO builderError(int status, String message, String path, String error) {
         return ErrorResponseDTO.builder()
                 .timestamp(LocalDateTime.now())

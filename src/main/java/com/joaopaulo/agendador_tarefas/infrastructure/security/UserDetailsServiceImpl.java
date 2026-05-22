@@ -15,9 +15,12 @@ public class UserDetailsServiceImpl{
 
     public UserDetails carregarDadosUsuario(String email, String token) {
         UsuarioDTO usuarioDTO = usuarioClient.buscarUsuarioPorEmail(email, token);
+        if (usuarioDTO == null) {
+            return null;
+        }
         return User
-                .withUsername(usuarioDTO.getEmail()) // Define o nome de usuário como o e-mail
-                .password(usuarioDTO.getSenha()) // Define a senha do usuário
+                .withUsername(usuarioDTO.getEmail())
+                .password(usuarioDTO.getSenha() != null ? usuarioDTO.getSenha() : "")
                 .build();
     }
 

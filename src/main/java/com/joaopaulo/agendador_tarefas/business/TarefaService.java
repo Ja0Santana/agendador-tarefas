@@ -23,6 +23,7 @@ public class TarefaService {
     private final JwtUtil jwtUtil;
 
     public TarefaDTO gravarTarefa(String token, TarefaDTO tarefaDTO) {
+        validarDataEvento(tarefaDTO.getDataEvento());
         String emailUsuario = jwtUtil.extractUsername(token.substring(7));
         tarefaDTO.setEmailUsuario(emailUsuario);
         tarefaDTO.setDataCriacao(LocalDateTime.now());
@@ -41,28 +42,62 @@ public class TarefaService {
     public List<TarefaDTO> buscaListaDeTarefasPorEmail(String token) {
         String email = jwtUtil.extractUsername(token.substring(7));
         List<TarefaEntity> tarefas = tarefaRepository.findByEmailUsuario(email);
+
+        LocalDateTime now = LocalDateTime.now();
+        boolean isUpdated = false;
+
+        for (TarefaEntity tarefa : tarefas) {
+            if (tarefa.getDataEvento() != null && tarefa.getDataEvento().isBefore(now)) {
+                if (tarefa.getStatusNotificacao() == StatusNotificacao.PENDENTE || 
+                    tarefa.getStatusNotificacao() == StatusNotificacao.NOTIFICADA) {
+                    tarefa.setStatusNotificacao(StatusNotificacao.VENCIDA);
+                    isUpdated = true;
+                }
+            }
+        }
+
+        if (isUpdated) {
+            tarefaRepository.saveAll(tarefas);
+        }
+
         return tarefas.stream()
                 .map(tarefaMapper::paraTarefaDTO)
                 .toList();
     }
     public void deletarTarefaPorId(String id) {
         if (!tarefaRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Tarefa nao encontrada para o id: " + id);
+            throw new ResourceNotFoundException("Tarefa nao encontrada para id: " + id);
         }
         tarefaRepository.deleteById(id);
     }
 
     public TarefaDTO atualizarStatusNotificacaoDaTarefa(StatusNotificacao statusNotificacao, String id) {
         TarefaEntity tarefaEntity = tarefaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Tarefa nao encontrada para o id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Tarefa nao encontrada para id: " + id));
         tarefaEntity.setStatusNotificacao(statusNotificacao);
         return tarefaMapper.paraTarefaDTO(tarefaRepository.save(tarefaEntity));
     }
 
     public TarefaDTO alterarTarefa(TarefaDTO tarefaDTO, String id) {
+        validarDataEvento(tarefaDTO.getDataEvento());
         TarefaEntity tarefaEntity = tarefaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Tarefa nao encontrada para o id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Tarefa nao encontrada para id: " + id));
         tarefaUpdateMapper.updateTarefas(tarefaDTO, tarefaEntity);
+        
+        // Se a data do evento da tarefa for no futuro, ela deve retornar ao status PENDENTE
+        if (tarefaEntity.getDataEvento() != null && tarefaEntity.getDataEvento().isAfter(LocalDateTime.now(java.time.ZoneId.of("America/Sao_Paulo")))) {
+            tarefaEntity.setStatusNotificacao(StatusNotificacao.PENDENTE);
+        }
+        
         return tarefaMapper.paraTarefaDTO(tarefaRepository.save(tarefaEntity));
+    }
+
+    private void validarDataEvento(LocalDateTime dataEvento) {
+        if (dataEvento != null) {
+            LocalDateTime minPermitted = LocalDateTime.now(java.time.ZoneId.of("America/Sao_Paulo")).minusMinutes(1);
+            if (dataEvento.isBefore(minPermitted)) {
+                throw new IllegalArgumentException("A data do evento não pode estar no passado.");
+            }
+        }
     }
 }

@@ -1,15 +1,10 @@
 package com.joaopaulo.agendador_tarefas.infrastructure.security;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import javax.crypto.SecretKey;
-import java.util.Base64;
-import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
