@@ -52,7 +52,7 @@ class TarefaServiceTest {
         
         when(jwtUtil.extractUsername(any())).thenReturn(email);
         when(tarefaMapper.paraTarefaEntity(any())).thenReturn(entity);
-        when(tarefaRepository.save(any())).thenReturn(entity);
+        when(tarefaRepository.save(entity)).thenReturn(entity);
         when(tarefaMapper.paraTarefaDTO(any())).thenReturn(requestDTO);
 
         TarefaDTO result = tarefaService.gravarTarefa(token, requestDTO);
@@ -129,7 +129,7 @@ class TarefaServiceTest {
         TarefaEntity entity = new TarefaEntity();
         
         when(tarefaRepository.findById(id)).thenReturn(Optional.of(entity));
-        when(tarefaRepository.save(any())).thenReturn(entity);
+        when(tarefaRepository.save(entity)).thenReturn(entity);
         when(tarefaMapper.paraTarefaDTO(any())).thenReturn(new TarefaDTO());
 
         tarefaService.atualizarStatusNotificacaoDaTarefa(novoStatus, id);
@@ -141,7 +141,7 @@ class TarefaServiceTest {
     @Test
     @DisplayName("Deve lançar erro ao atualizar status de tarefa inexistente")
     void deveErroAoAtualizarStatusInexistente() {
-        when(tarefaRepository.findById(any())).thenReturn(Optional.empty());
+        when(tarefaRepository.findById("999")).thenReturn(Optional.empty());
         StatusNotificacao status = StatusNotificacao.PENDENTE;
 
         assertThatThrownBy(() -> tarefaService.atualizarStatusNotificacaoDaTarefa(status, "999"))
@@ -151,7 +151,7 @@ class TarefaServiceTest {
     @Test
     @DisplayName("Deve lançar erro ao alterar tarefa inexistente")
     void deveErroAoAlterarInexistente() {
-        when(tarefaRepository.findById(any())).thenReturn(Optional.empty());
+        when(tarefaRepository.findById("999")).thenReturn(Optional.empty());
         TarefaDTO dto = new TarefaDTO();
 
         assertThatThrownBy(() -> tarefaService.alterarTarefa(dto, "999"))
@@ -166,7 +166,7 @@ class TarefaServiceTest {
         TarefaEntity entity = new TarefaEntity();
         
         when(tarefaRepository.findById(id)).thenReturn(Optional.of(entity));
-        when(tarefaRepository.save(any())).thenReturn(entity);
+        when(tarefaRepository.save(entity)).thenReturn(entity);
         when(tarefaMapper.paraTarefaDTO(any())).thenReturn(dto);
 
         TarefaDTO result = tarefaService.alterarTarefa(dto, id);
@@ -176,3 +176,4 @@ class TarefaServiceTest {
         verify(tarefaRepository).save(entity);
     }
 }
+

@@ -16,6 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class TarefaService {
     private final TarefaRepository tarefaRepository;
     private final TarefaMapper tarefaMapper;
@@ -101,3 +102,5 @@ public class TarefaService {
         }
     }
 }
+
+

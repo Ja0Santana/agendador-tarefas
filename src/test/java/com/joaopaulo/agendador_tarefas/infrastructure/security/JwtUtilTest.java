@@ -8,6 +8,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SuppressWarnings("null")
 class JwtUtilTest {
 
     private JwtUtil jwtUtil;
@@ -60,3 +61,5 @@ class JwtUtilTest {
                 .compact();
     }
 }
+
+

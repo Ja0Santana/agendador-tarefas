@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(TarefaController.class)
 @org.springframework.context.annotation.Import(GlobalExceptionHandler.class)
+@SuppressWarnings("null")
 class GlobalExceptionHandlerTest {
 
     @Autowired
@@ -63,3 +64,5 @@ class GlobalExceptionHandlerTest {
                 .andExpect(status().isUnauthorized());
     }
 }
+
+

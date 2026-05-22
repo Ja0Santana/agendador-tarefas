@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TarefaController.class)
+@SuppressWarnings("null")
 class TarefaControllerTest {
 
     @Autowired
@@ -126,3 +127,5 @@ class TarefaControllerTest {
                 .andExpect(jsonPath("$.nomeTarefa").value("Alterada"));
     }
 }
+
+

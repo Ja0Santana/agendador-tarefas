@@ -24,6 +24,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("null")
 class JwtRequestFilterTest {
 
     @Mock
@@ -97,3 +98,5 @@ class JwtRequestFilterTest {
         assertThat(stringWriter.toString()).contains("Token expirado");
     }
 }
+
+
